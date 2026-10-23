@@ -286,7 +286,6 @@ flowchart TB
     aSearch -- "REST: session_id + optional text" --> rSearch
     aEngine -- "REST" --> rEngine
     aLive -- "SSE GET /stream" --> rLive
-
 ```
   
  

@@ -289,39 +289,4 @@ flowchart TB
 
 ```
   
-  plugin Components:
-``` mermaid
----
-config:
-  theme: base
----
-flowchart TB
-    sEngine["Engine Service<br/>(Backend — Business layer)"]
-
-    subgraph SB["Plugin Sandbox — one plugin package"]
-        direction TB
-        manifest["Plugin Manifest<br/>name, version, question it answers,<br/>event types / protocols wanted, limits"]
-
-        subgraph RUN["Running container — no network · read-only filesystem · no credentials · CPU / memory / time limits"]
-            direction TB
-            subgraph SDK["Plugin SDK — written once, shared by every plugin"]
-                runner["Runner (entry point)"]
-                reader["Event Reader<br/>stdin JSON lines → Event objects"]
-                contract["AnalysisEngine contract<br/>analyze(events) → findings"]
-                writer["Finding Writer<br/>validates the Finding shape → stdout"]
-            end
-            logic["Analysis Logic<br/>plugin-specific — the only part a plugin author writes"]
-        end
-    end
-
-    sEngine -- "reads before the run: which plugin, what data, what limits" --> manifest
-    sEngine -- "start the run (container per run)" --> runner
-    sEngine -- "events in — stdin, JSON lines" --> reader
-
-    runner -- "1. read events" --> reader
-    runner -- "2. call analyze(events)" --> contract
-    runner -- "3. write findings" --> writer
-    logic -- "implements" --> contract
-
-    writer -. "findings out — stdout, JSON lines (return, not a call)" .-> sEngine
-```
+ 
